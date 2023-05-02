@@ -1,19 +1,3 @@
-#################
-# Resource Group
-#################
-
-resource "azurerm_resource_group" "main" {
-  count = var.resource_group_name == null ? 1 : 0
-
-  name     = "${var.name}-rg"
-  location = var.location
-  tags     = var.tags
-}
-
-locals {
-  resource_group_name = coalesce(one(azurerm_resource_group.main[*].name), var.resource_group_name)
-}
-
 ##################
 # Virtual Network
 ##################
@@ -21,7 +5,7 @@ locals {
 resource "azurerm_virtual_network" "main" {
   name                = var.name
   location            = var.location
-  resource_group_name = local.resource_group_name
+  resource_group_name = var.resource_group_name
   tags                = var.tags
 
   address_space = var.address_space
@@ -47,7 +31,7 @@ resource "azurerm_virtual_network_peering" "main" {
 
   name                      = format("%s_to_%s", azurerm_virtual_network.main.name, each.value["name"])
   virtual_network_name      = azurerm_virtual_network.main.name
-  resource_group_name       = local.resource_group_name
+  resource_group_name       = var.resource_group_name
   remote_virtual_network_id = each.value["id"]
 
   allow_virtual_network_access = each.value["allow_virtual_network_access"]
@@ -77,7 +61,7 @@ resource "azurerm_subnet" "main" {
 
   name                 = each.value["name"]
   virtual_network_name = azurerm_virtual_network.main.name
-  resource_group_name  = local.resource_group_name
+  resource_group_name  = var.resource_group_name
 
   address_prefixes = [each.value["prefix"]]
 
