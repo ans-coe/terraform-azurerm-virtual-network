@@ -31,11 +31,6 @@ on:
         type: string
         description: Terraform version to use.
         default: latest
-      tf_path:
-        required: false
-        type: string
-        description: Path to the location of your Terraform configuration or module.
-        default: ${{ vars.GITHUB_WORKSPACE }}
       reviewdog_pr_reporter:
         required: false
         type: string
@@ -47,7 +42,7 @@ env:
   TF_INPUT: false
   TF_CLI_ARGS_init: -backend=false
   tf_version: ${{ inputs.tf_version }}
-  tf_path: ${{ inputs.tf_path }}
+  tf_path: ${{ vars.GITHUB_WORKSPACE }}
 
 jobs:
   validate:

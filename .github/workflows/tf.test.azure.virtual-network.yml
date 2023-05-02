@@ -21,7 +21,6 @@ jobs:
   test:
     uses: ./.github/workflows/tf.test.yml
     with:
-      tf_path: azure/virtual-network
       tf_version: latest
     permissions:
       contents: read
