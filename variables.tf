@@ -96,12 +96,7 @@ variable "subnets" {
       ))
     })
   )
-  default = [
-    {
-      name   = "default"
-      prefix = "10.0.0.0/24"
-    }
-  ]
+  default = []
 }
 
 variable "subnet_network_security_group_map" {
