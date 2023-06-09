@@ -68,3 +68,7 @@ This module will create an Azure Virtual Network with subnets using a complex ob
 
 No modules.
 <!-- END_TF_DOCS -->
+_______________
+| Classified  |
+| :---------: |
+|   PUBLIC    |
