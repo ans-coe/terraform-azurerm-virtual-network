@@ -25,3 +25,7 @@ No resources.
 |------|--------|---------|
 | <a name="module_vnet"></a> [vnet](#module\_vnet) | ../../ | n/a |
 <!-- END_TF_DOCS -->
+_______________
+| Classified  |
+| :---------: |
+|   PUBLIC    |
