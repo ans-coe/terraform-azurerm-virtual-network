@@ -36,3 +36,7 @@ No inputs.
 | <a name="module_vnet"></a> [vnet](#module\_vnet) | ../../ | n/a |
 | <a name="module_vnet_peer"></a> [vnet\_peer](#module\_vnet\_peer) | ../../ | n/a |
 <!-- END_TF_DOCS -->
+_______________
+| Classified  |
+| :---------: |
+|   PUBLIC    |
