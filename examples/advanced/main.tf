@@ -28,23 +28,20 @@ module "vnet" {
 
   address_space = ["10.0.0.0/16"]
   # ddos_protection_plan_id = azurerm_network_ddos_protection_plan.vnet.id
-  subnets = [
-    {
-      name              = "default"
+  subnets = {
+    "default" = {
       prefix            = "10.0.0.0/24"
       service_endpoints = ["Microsoft.Storage"]
-    },
+    }
 
-    {
-      name                                          = "private-links"
+    "private-links" = {
       prefix                                        = "10.0.1.0/24"
       service_endpoints                             = ["Microsoft.Storage"]
       private_endpoint_network_policies_enabled     = true
       private_link_service_network_policies_enabled = true
-    },
+    }
 
-    {
-      name              = "appservice"
+    "appservice" = {
       prefix            = "10.0.11.0/24"
       service_endpoints = ["Microsoft.Storage"]
       delegations = {
@@ -53,13 +50,12 @@ module "vnet" {
           actions = ["Microsoft.Network/virtualNetworks/subnets/action"]
         }
       }
-    },
+    }
 
-    {
-      name   = "blackhole"
+    "blackhole" = {
       prefix = "10.0.255.0/24"
     }
-  ]
+  }
 
   subnet_network_security_group_map = {
     "blackhole" = azurerm_network_security_group.vnet.id
@@ -73,15 +69,17 @@ module "vnet" {
     "default" = azurerm_nat_gateway.vnet.id
   }
 
-  peer_networks = [{
-    name = module.vnet_peer.name
-    id   = module.vnet_peer.id
-  }]
+  peer_networks = {
+    (module.vnet_peer.name) = {
+      id = module.vnet_peer.id
+    }
+  }
 
-  private_dns_zones = [{
-    name                = azurerm_private_dns_zone.vnet.name
-    resource_group_name = azurerm_private_dns_zone.vnet.resource_group_name
-  }]
+  private_dns_zones = {
+    (azurerm_private_dns_zone.vnet.name) = {
+      resource_group_name = azurerm_private_dns_zone.vnet.resource_group_name
+    }
+  }
 }
 
 module "vnet_peer" {
@@ -93,15 +91,17 @@ module "vnet_peer" {
   tags                = local.tags
 
   address_space = ["10.1.0.0/16"]
-  subnets = [{
-    name   = "default"
-    prefix = "10.1.0.0/24"
-  }]
+  subnets = {
+    "default" = {
+      prefix = "10.1.0.0/24"
+    }
+  }
 
-  peer_networks = [{
-    name = module.vnet.name
-    id   = module.vnet.id
-  }]
+  peer_networks = {
+    (module.vnet.name) = {
+      id = module.vnet.id
+    }
+  }
 }
 
 # ddos protection plans are expensive so this has been commented out

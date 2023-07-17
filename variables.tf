@@ -54,9 +54,8 @@ variable "bgp_community" {
 
 variable "peer_networks" {
   description = "Networks to peer to this virtual network."
-  type = list(
+  type = map(
     object({
-      name                         = string
       id                           = string
       allow_virtual_network_access = optional(bool, true)
       allow_forwarded_traffic      = optional(bool, true)
@@ -64,26 +63,24 @@ variable "peer_networks" {
       use_remote_gateways          = optional(bool)
     })
   )
-  default = []
+  default = {}
 }
 
 variable "private_dns_zones" {
   description = "Private DNS Zones to link to this virtual network."
-  type = list(
+  type = map(
     object({
-      name                 = string
       resource_group_name  = string
       registration_enabled = optional(bool)
     })
   )
-  default = []
+  default = {}
 }
 
 variable "subnets" {
   description = "Subnets to create in this virtual network."
-  type = list(
+  type = map(
     object({
-      name                                          = string
       prefix                                        = string
       service_endpoints                             = optional(list(string))
       private_endpoint_network_policies_enabled     = optional(bool)
@@ -96,7 +93,7 @@ variable "subnets" {
       ))
     })
   )
-  default = []
+  default = {}
 }
 
 variable "subnet_network_security_group_map" {
