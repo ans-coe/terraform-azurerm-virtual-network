@@ -27,10 +27,9 @@ module "vnet" {
   tags                = local.tags
 
   address_space = ["10.0.0.0/16"]
-  subnets = [
-    {
-      name   = "default"
+  subnets = {
+    "default" = {
       prefix = "10.0.0.0/24"
     }
-  ]
+  }
 }

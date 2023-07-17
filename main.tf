@@ -27,9 +27,9 @@ resource "azurerm_virtual_network_dns_servers" "main" {
 }
 
 resource "azurerm_virtual_network_peering" "main" {
-  for_each = { for p in var.peer_networks : p.name => p }
+  for_each = var.peer_networks
 
-  name                      = format("%s_to_%s", azurerm_virtual_network.main.name, each.value["name"])
+  name                      = format("%s_to_%s", azurerm_virtual_network.main.name, each.key)
   virtual_network_name      = azurerm_virtual_network.main.name
   resource_group_name       = var.resource_group_name
   remote_virtual_network_id = each.value["id"]
@@ -41,13 +41,13 @@ resource "azurerm_virtual_network_peering" "main" {
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "main" {
-  for_each = { for l in var.private_dns_zones : l.name => l }
+  for_each = var.private_dns_zones
 
   name                  = azurerm_virtual_network.main.name
   resource_group_name   = each.value["resource_group_name"]
   tags                  = var.tags
   virtual_network_id    = azurerm_virtual_network.main.id
-  private_dns_zone_name = each.value["name"]
+  private_dns_zone_name = each.key
 
   registration_enabled = each.value["registration_enabled"]
 }
@@ -57,9 +57,9 @@ resource "azurerm_private_dns_zone_virtual_network_link" "main" {
 ##########
 
 resource "azurerm_subnet" "main" {
-  for_each = { for s in var.subnets : s.name => s }
+  for_each = var.subnets
 
-  name                 = each.value["name"]
+  name                 = each.key
   virtual_network_name = azurerm_virtual_network.main.name
   resource_group_name  = var.resource_group_name
 
