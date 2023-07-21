@@ -1,4 +1,4 @@
-# Terraform Module - Azure - Virtual Network
+# Terraform (Module) - AzureRM - Virtual Network
 
 #### Table of Contents
 
@@ -30,14 +30,15 @@ This module will create an Azure Virtual Network with subnets using a complex ob
 | <a name="input_address_space"></a> [address\_space](#input\_address\_space) | The address spaces of the virtual network. | `list(string)` | <pre>[<br>  "10.0.0.0/16"<br>]</pre> | no |
 | <a name="input_bgp_community"></a> [bgp\_community](#input\_bgp\_community) | The BGP Community for this virtual network. | `string` | `null` | no |
 | <a name="input_ddos_protection_plan_id"></a> [ddos\_protection\_plan\_id](#input\_ddos\_protection\_plan\_id) | A DDoS Protection plan ID to assign to the virtual network. | `string` | `null` | no |
-| <a name="input_dns_servers"></a> [dns\_servers](#input\_dns\_servers) | The DNS servers to use with this virtual network. | `list(string)` | `null` | no |
+| <a name="input_dns_servers"></a> [dns\_servers](#input\_dns\_servers) | The DNS servers to use with this virtual network. | `list(string)` | `[]` | no |
+| <a name="input_include_azure_dns"></a> [include\_azure\_dns](#input\_include\_azure\_dns) | If using custom DNS servers, include Azure DNS IP as a DNS server. | `bool` | `false` | no |
 | <a name="input_location"></a> [location](#input\_location) | The location of created resources. | `string` | `"uksouth"` | no |
-| <a name="input_peer_networks"></a> [peer\_networks](#input\_peer\_networks) | Networks to peer to this virtual network. | <pre>map(<br>    object({<br>      id                           = string<br>      allow_virtual_network_access = optional(bool, true)<br>      allow_forwarded_traffic      = optional(bool, true)<br>      allow_gateway_transit        = optional(bool)<br>      use_remote_gateways          = optional(bool)<br>    })<br>  )</pre> | `{}` | no |
-| <a name="input_private_dns_zones"></a> [private\_dns\_zones](#input\_private\_dns\_zones) | Private DNS Zones to link to this virtual network. | <pre>map(<br>    object({<br>      resource_group_name  = string<br>      registration_enabled = optional(bool)<br>    })<br>  )</pre> | `{}` | no |
+| <a name="input_peer_networks"></a> [peer\_networks](#input\_peer\_networks) | Networks to peer to this virtual network with the map name indicating the network name. | <pre>map(object({<br>    id                           = string<br>    allow_virtual_network_access = optional(bool, true)<br>    allow_forwarded_traffic      = optional(bool, true)<br>    allow_gateway_transit        = optional(bool)<br>    use_remote_gateways          = optional(bool)<br>  }))</pre> | `{}` | no |
+| <a name="input_private_dns_zones"></a> [private\_dns\_zones](#input\_private\_dns\_zones) | Private DNS Zones to link to this virtual network with the map name indicating the private dns zone name. | <pre>map(object({<br>    resource_group_name  = string<br>    registration_enabled = optional(bool)<br>  }))</pre> | `{}` | no |
 | <a name="input_subnet_nat_gateway_map"></a> [subnet\_nat\_gateway\_map](#input\_subnet\_nat\_gateway\_map) | Mapping of subnet names to NAT Gateway IDs. | `map(string)` | `{}` | no |
 | <a name="input_subnet_network_security_group_map"></a> [subnet\_network\_security\_group\_map](#input\_subnet\_network\_security\_group\_map) | Mapping of subnet names to NSG IDs. | `map(string)` | `{}` | no |
 | <a name="input_subnet_route_table_map"></a> [subnet\_route\_table\_map](#input\_subnet\_route\_table\_map) | Mapping of subnet names to Route Table IDs. | `map(string)` | `{}` | no |
-| <a name="input_subnets"></a> [subnets](#input\_subnets) | Subnets to create in this virtual network. | <pre>map(<br>    object({<br>      prefix                                        = string<br>      service_endpoints                             = optional(list(string))<br>      private_endpoint_network_policies_enabled     = optional(bool)<br>      private_link_service_network_policies_enabled = optional(bool)<br>      delegations = optional(map(<br>        object({<br>          name    = string<br>          actions = list(string)<br>        })<br>      ))<br>    })<br>  )</pre> | `{}` | no |
+| <a name="input_subnets"></a> [subnets](#input\_subnets) | Subnets to create in this virtual network with the map name indicating the subnet name. | <pre>map(object({<br>    prefix                                        = string<br>    service_endpoints                             = optional(list(string))<br>    private_endpoint_network_policies_enabled     = optional(bool)<br>    private_link_service_network_policies_enabled = optional(bool)<br>    delegations = optional(map(<br>      object({<br>        service = string<br>        actions = list(string)<br>      })<br>    ), {})<br>  }))</pre> | `{}` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Tags applied to created resources. | `map(string)` | `null` | no |
 
 ## Outputs
