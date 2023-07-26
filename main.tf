@@ -86,21 +86,21 @@ resource "azurerm_subnet" "main" {
 # Associations
 
 resource "azurerm_subnet_network_security_group_association" "main" {
-  for_each = var.subnet_network_security_group_map
+  for_each = local.subnet_network_security_group_map
 
   subnet_id                 = azurerm_subnet.main[each.key].id
   network_security_group_id = each.value
 }
 
 resource "azurerm_subnet_route_table_association" "main" {
-  for_each = var.subnet_route_table_map
+  for_each = local.subnet_route_table_map
 
   subnet_id      = azurerm_subnet.main[each.key].id
   route_table_id = each.value
 }
 
 resource "azurerm_subnet_nat_gateway_association" "main" {
-  for_each = var.subnet_nat_gateway_map
+  for_each = local.subnet_nat_gateway_map
 
   subnet_id      = azurerm_subnet.main[each.key].id
   nat_gateway_id = each.value

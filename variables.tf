@@ -85,6 +85,15 @@ variable "subnets" {
       service_endpoints                             = optional(list(string))
       private_endpoint_network_policies_enabled     = optional(bool)
       private_link_service_network_policies_enabled = optional(bool)
+
+      // The below bools are necessary in the current version of Terraform & AzureRM, please see README.md for explaination.
+      associate_nsg             = optional(bool, false)
+      associate_rt              = optional(bool, false)
+      associate_ngw             = optional(bool, false)
+      network_security_group_id = optional(string)
+      route_table_id            = optional(string)
+      nat_gateway_id            = optional(string)
+
       delegations = optional(map(
         object({
           name    = string
@@ -94,22 +103,4 @@ variable "subnets" {
     })
   )
   default = {}
-}
-
-variable "subnet_network_security_group_map" {
-  description = "Mapping of subnet names to NSG IDs."
-  type        = map(string)
-  default     = {}
-}
-
-variable "subnet_route_table_map" {
-  description = "Mapping of subnet names to Route Table IDs."
-  type        = map(string)
-  default     = {}
-}
-
-variable "subnet_nat_gateway_map" {
-  description = "Mapping of subnet names to NAT Gateway IDs."
-  type        = map(string)
-  default     = {}
 }

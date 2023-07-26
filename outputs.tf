@@ -28,9 +28,12 @@ output "subnets" {
   value = {
     for s in azurerm_subnet.main
     : s.name => {
-      name   = s.name
-      prefix = one(s.address_prefixes)
-      id     = s.id
+      name                      = s.name
+      prefix                    = one(s.address_prefixes)
+      id                        = s.id
+      network_security_group_id = try(azurerm_subnet_network_security_group_association.main[s.name].network_security_group_id, null)
+      route_table_id            = try(azurerm_subnet_route_table_association.main[s.name].route_table_id, null)
+      nat_gateway_id            = try(azurerm_subnet_nat_gateway_association.main[s.name].nat_gateway_id, null)
     }
   }
 }
