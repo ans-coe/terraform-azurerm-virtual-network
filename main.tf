@@ -12,8 +12,7 @@ resource "azurerm_virtual_network" "main" {
 
   bgp_community = var.bgp_community
   dynamic "ddos_protection_plan" {
-    for_each = toset(var.ddos_protection_plan_id == null ? [] : [1])
-
+    for_each = var.ddos_protection_plan_id == null ? [] : [1]
     content {
       id     = var.ddos_protection_plan_id
       enable = true
@@ -22,8 +21,10 @@ resource "azurerm_virtual_network" "main" {
 }
 
 resource "azurerm_virtual_network_dns_servers" "main" {
+  count = length(var.dns_servers) > 0 ? 1 : 0
+
   virtual_network_id = azurerm_virtual_network.main.id
-  dns_servers        = var.dns_servers
+  dns_servers        = var.include_azure_dns ? concat(var.dns_servers, [local.azure_dns_ip]) : var.dns_servers
 }
 
 resource "azurerm_virtual_network_peering" "main" {
@@ -70,13 +71,11 @@ resource "azurerm_subnet" "main" {
   private_link_service_network_policies_enabled = each.value["private_link_service_network_policies_enabled"]
 
   dynamic "delegation" {
-    for_each = each.value["delegations"] == null ? {} : each.value["delegations"]
-
+    for_each = each.value["delegations"]
     content {
       name = delegation.key
-
       service_delegation {
-        name    = delegation.value["name"]
+        name    = delegation.value["service"]
         actions = delegation.value["actions"]
       }
     }

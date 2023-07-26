@@ -37,7 +37,13 @@ variable "address_space" {
 variable "dns_servers" {
   description = "The DNS servers to use with this virtual network."
   type        = list(string)
-  default     = null
+  default     = []
+}
+
+variable "include_azure_dns" {
+  description = "If using custom DNS servers, include Azure DNS IP as a DNS server."
+  type        = bool
+  default     = false
 }
 
 variable "ddos_protection_plan_id" {
@@ -53,54 +59,48 @@ variable "bgp_community" {
 }
 
 variable "peer_networks" {
-  description = "Networks to peer to this virtual network."
-  type = map(
-    object({
-      id                           = string
-      allow_virtual_network_access = optional(bool, true)
-      allow_forwarded_traffic      = optional(bool, true)
-      allow_gateway_transit        = optional(bool)
-      use_remote_gateways          = optional(bool)
-    })
-  )
+  description = "Networks to peer to this virtual network with the map name indicating the network name."
+  type = map(object({
+    id                           = string
+    allow_virtual_network_access = optional(bool, true)
+    allow_forwarded_traffic      = optional(bool, true)
+    allow_gateway_transit        = optional(bool)
+    use_remote_gateways          = optional(bool)
+  }))
   default = {}
 }
 
 variable "private_dns_zones" {
-  description = "Private DNS Zones to link to this virtual network."
-  type = map(
-    object({
-      resource_group_name  = string
-      registration_enabled = optional(bool)
-    })
-  )
+  description = "Private DNS Zones to link to this virtual network with the map name indicating the private dns zone name."
+  type = map(object({
+    resource_group_name  = string
+    registration_enabled = optional(bool)
+  }))
   default = {}
 }
 
 variable "subnets" {
-  description = "Subnets to create in this virtual network."
-  type = map(
-    object({
-      prefix                                        = string
-      service_endpoints                             = optional(list(string))
-      private_endpoint_network_policies_enabled     = optional(bool)
-      private_link_service_network_policies_enabled = optional(bool)
+  description = "Subnets to create in this virtual network with the map name indicating the subnet name."
+  type = map(object({
+    prefix                                        = string
+    service_endpoints                             = optional(list(string))
+    private_endpoint_network_policies_enabled     = optional(bool)
+    private_link_service_network_policies_enabled = optional(bool)
 
-      // The below bools are necessary in the current version of Terraform & AzureRM, please see README.md for explaination.
-      associate_nsg             = optional(bool, false)
-      associate_rt              = optional(bool, false)
-      associate_ngw             = optional(bool, false)
-      network_security_group_id = optional(string)
-      route_table_id            = optional(string)
-      nat_gateway_id            = optional(string)
+    // The below bools are necessary in the current version of Terraform & AzureRM, please see README.md for explaination.
+    associate_nsg             = optional(bool, false)
+    associate_rt              = optional(bool, false)
+    associate_ngw             = optional(bool, false)
+    network_security_group_id = optional(string)
+    route_table_id            = optional(string)
+    nat_gateway_id            = optional(string)
 
-      delegations = optional(map(
-        object({
-          name    = string
-          actions = list(string)
-        })
-      ))
-    })
-  )
+    delegations = optional(map(
+      object({
+        service = string
+        actions = list(string)
+      })
+    ), {})
+  }))
   default = {}
 }
