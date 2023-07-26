@@ -60,20 +60,17 @@ module "vnet" {
     }
 
     "blackhole" = {
-      prefix = "10.0.255.0/24"
+      prefix        = "10.0.255.0/24"
+      associate_nsg = true
+      // network_security_group_id only applies if associate_nsg is true
+      network_security_group_id = azurerm_network_security_group.vnet.id
+      associate_rt              = true
+      // route_table_id only applies if associate_rt is true
+      route_table_id = azurerm_route_table.vnet.id
+      associate_ngw  = true
+      // nat_gateway_id only applies if associate_ngw is true
+      nat_gateway_id = azurerm_nat_gateway.vnet.id
     }
-  }
-
-  subnet_network_security_group_map = {
-    "blackhole" = azurerm_network_security_group.vnet.id
-  }
-
-  subnet_route_table_map = {
-    "blackhole" = azurerm_route_table.vnet.id
-  }
-
-  subnet_nat_gateway_map = {
-    "default" = azurerm_nat_gateway.vnet.id
   }
 
   peer_networks = {
